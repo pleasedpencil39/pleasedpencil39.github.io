@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Display</title>
+    <style>
+        /* 隐藏滚动条，如果需要 */
+        body {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align:center;">
+        <img id="myImage" src="./404.gif" alt="404 Not Found" style="max-width:100%;">
+    </div>
+
+    <script>
+        // 获取图片元素
+        var img = document.getElementById('myImage');
+
+        // 禁止鼠标右键菜单
+        img.oncontextmenu = function(event) {
+            event.preventDefault();
+        };
+
+        // 阻止拖拽保存
+        img.ondragstart = function() {
+            return false;
+        };
+
+        // 阻止选中图片
+        if (document.selection) {
+            document.onselectstart = function() {
+                return false;
+            };
+        } else {
+            window.onload = function() {
+                img.onmousedown = function() {
+                    return 'defaultAction';
+                };
+            };
+        }
+    </script>
+</body>
+</html>
