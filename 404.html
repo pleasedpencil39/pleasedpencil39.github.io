@@ -5,28 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Display</title>
     <style>
-        /* 隐藏滚动条，如果需要 */
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
+        }
+
+        .image-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .overlay-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 1; /* 设置为1以保持全透明度 */
         }
     </style>
 </head>
 <body>
-    <div style="text-align:center;">
-        <img id="myImage" src="./404.gif" alt="404 Not Found" style="max-width:100%;">
+    <div class="image-container">
+        <img id="mainImage" src="./404.gif" alt="404 Not Found" style="max-width:100%; max-height:100%;">
+        <img class="overlay-image" src="./transparent.png" alt="Transparent Overlay" style="max-width:100%; max-height:100%;">
     </div>
 
     <script>
-        // 获取图片元素
-        var img = document.getElementById('myImage');
+        // 获取主图片元素
+        var mainImg = document.getElementById('mainImage');
 
         // 禁止鼠标右键菜单
-        img.oncontextmenu = function(event) {
+        mainImg.oncontextmenu = function(event) {
             event.preventDefault();
         };
 
         // 阻止拖拽保存
-        img.ondragstart = function() {
+        mainImg.ondragstart = function() {
             return false;
         };
 
@@ -37,7 +59,7 @@
             };
         } else {
             window.onload = function() {
-                img.onmousedown = function() {
+                mainImg.onmousedown = function() {
                     return 'defaultAction';
                 };
             };
