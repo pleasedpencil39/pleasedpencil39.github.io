@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>速查分！内部通道，限时免费</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background-color: #F5F3EB;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 顶部横幅 */
+        .top-banner {
+            width: 100%;
+            background-color: #C8162D;
+            color: white;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 600;
+            font-size: 16px;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .top-banner .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #FFDE00;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        /* 主容器 */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 图标部分 */
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background-color: #C8162D;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0 15px 0;
+            box-shadow: 0 4px 10px rgba(200, 22, 45, 0.3);
+        }
+
+        .icon-wrapper svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        /* 标题文字 */
+        .title-main {
+            color: #A50F22;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .title-sub {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        /* 在线人数哄骗区 */
+        .online-count {
+            width: 100%;
+            text-align: right;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            padding-right: 5px;
+        }
+        .online-count span {
+            color: #C8162D;
+            font-weight: bold;
+        }
+
+        /* 表单卡片 */
+        .form-card {
+            background: white;
+            width: 100%;
+            padding: 25px 20px;
+            border-radius: 16px;
+            border: 1px solid #EEDBD9;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            display: block;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        /* 输入框淡红色边框 */
+        .form-group input {
+            width: 100%;
+            padding: 14px 12px;
+            border: 1px solid #F0B3B3;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #FFFDFB;
+            outline: none;
+            transition: border-color 0.3s ease;
+            color: #333;
+        }
+
+        .form-group input::placeholder {
+            color: #B0B0B0;
+        }
+
+        .form-group input:focus {
+            border-color: #C8162D;
+            box-shadow: 0 0 0 2px rgba(200, 22, 45, 0.1);
+        }
+
+        /* 提醒小字 */
+        .warning-msg {
+            font-size: 13px;
+            color: #C8162D;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* 验证码区域 - 优化宽度与对齐 */
+        .captcha-group {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .captcha-group .input-area {
+            flex: 1;
+        }
+
+        .captcha-img-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin-top: 24px;
+        }
+
+        /* 加宽验证码图片，确保一行能显示 */
+        .captcha-img {
+            width: 135px;
+            height: 48px;
+            background-color: #E0F2F1;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #E9C4C1;
+            user-select: none;
+        }
+
+        .captcha-img span {
+            font-size: 22px;
+            font-weight: bold;
+            color: #A50F22;
+            letter-spacing: 6px;
+            z-index: 2;
+        }
+
+        .captcha-img .line {
+            position: absolute;
+            background: rgba(200, 22, 45, 0.2);
+            pointer-events: none;
+        }
+
+        .captcha-refresh {
+            font-size: 13px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            margin-top: 5px;
+            cursor: pointer;
+        }
+
+        .captcha-refresh svg {
+            width: 14px;
+            height: 14px;
+            margin-right: 4px;
+            fill: #666;
+        }
+
+        /* 按钮 */
+        .submit-btn {
+            width: 100%;
+            padding: 16px 0;
+            background-color: #C8162D;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s, transform 0.1s;
+            letter-spacing: 2px;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* 底部提示 */
+        .footer-tip {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .footer-tip .top-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .footer-tip svg {
+            width: 14px;
+            height: 14px;
+            fill: #999;
+        }
+
+        .footer-tip .sub-line {
+            font-size: 11px;
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .footer-tip .sub-line img {
+            height: 16px;
+            width: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* ================== 进度条欺骗区 ================== */
+        #loader-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+            width: 100%;
+            height: 380px;
+            text-align: center;
+        }
+
+        #loader-wrapper .load-text {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        #loader-wrapper .progress-bg {
+            width: 80%;
+            height: 10px;
+            background-color: #F0F0F0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        #loader-wrapper .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #C8162D, #FF7B89);
+            border-radius: 10px;
+            transition: width 0.3s;
+        }
+
+        #loader-wrapper .sub-load-text {
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* ================== 恶搞阶段样式（全新美观UI） ================== */
+        #troll-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            width: 100%;
+            min-height: 380px;
+            background: radial-gradient(circle at center, #2E1A47 0%, #0F0F1A 100%);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.15), inset 0 0 40px rgba(255, 215, 0, 0.05);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #troll-wrapper .big-emoji {
+            font-size: 80px;
+            line-height: 1;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+            animation: pop-in 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #troll-wrapper h1 {
+            font-size: 48px;
+            color: #FFD700;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #FFD700, 0 0 20px #FFD700, 0 0 40px #FF8C00;
+            animation: pop-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #troll-wrapper .sub-tag {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 4px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fade-up 1s 0.4s forwards;
+        }
+
+        @keyframes pop-in {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fade-up {
+            0% {
+                transform: translateY(10px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Emoji 雨容器 */
+        .emoji-rain-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+            overflow: hidden;
+        }
+
+        .emoji-piece {
+            position: absolute;
+            top: -80px;
+            font-size: 30px;
+            animation: emoji-fall linear forwards;
+        }
+
+        @keyframes emoji-fall {
+            0% {
+                transform: translateY(0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(720deg) scale(0.8);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-banner">
+        <span class="dot"></span>
+        2026年高考内部查分通道
+        <span class="dot"></span>
+    </div>
+
+    <div class="container">
+        <div class="icon-wrapper">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 3L1 9l11 6 11-6-11-6zm0 13l-8-4.5v3.5L12 18l8-4.5v-3.5L12 16z"/>
+            </svg>
+        </div>
+
+        <div class="title-main">
+            广东省2026年普通高等学校招生<br>全国统一考试成绩查询内部通道
+        </div>
+        <div class="title-sub">
+            Guangdong 2026 College Entrance Examination Score<br>Query System
+        </div>
+
+        <!-- 伪造在线人数 -->
+        <div class="online-count">
+            当前在线查询：<span id="onlineNum">128</span> 人
+        </div>
+
+        <div class="form-card" id="formCard">
+            <!-- 登录表单 -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>准考证号</label>
+                    <input type="text" id="ticketNo" placeholder="请输入准考证号">
+                </div>
+                <div class="form-group">
+                    <label>查询密码</label>
+                    <input type="password" id="password" placeholder="请输入查询密码">
+                </div>
+                <div class="form-group captcha-group">
+                    <div class="input-area">
+                        <label>验证码</label>
+                        <input type="text" id="captchaInput" placeholder="请输入验证码">
+                    </div>
+                    <div class="captcha-img-wrapper">
+                        <div class="captcha-img" onclick="refreshCaptcha()">
+                            <div class="line" style="width: 40px; height: 2px; top: 20px; left: 10px; transform: rotate(30deg);"></div>
+                            <div class="line" style="width: 30px; height: 2px; top: 35px; left: 30px; transform: rotate(-20deg);"></div>
+                            <div class="line" style="width: 50px; height: 2px; top: 10px; left: 40px; transform: rotate(15deg);"></div>
+                            <span id="captchaText">0 2 3 0</span>
+                        </div>
+                        <div class="captcha-refresh" onclick="refreshCaptcha()">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                            </svg>
+                            换一张
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-msg">* 内部通道数据已同步，请准确输入</div>
+                <button class="submit-btn" id="queryBtn" onclick="startQuery()">立即查询</button>
+            </div>
+        </div>
+
+        <div class="footer-tip">
+            <div class="top-line">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                </svg>
+                请妥善保管您的准考证号和密码，谨防诈骗
+            </div>
+            <div class="sub-line">
+                <img src="https://beian.mps.gov.cn/img/logo01.dd7ff50e.png" alt="公安备案图标">
+                粤ICP备05008847号丨2026BZNB
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isQuerying = false;
+        let currentCaptcha = "";
+        let rainInterval;
+        let onlineInterval;
+
+        // 生成并刷新验证码
+        function refreshCaptcha() {
+            const textEl = document.getElementById('captchaText');
+            const num = Math.floor(1000 + Math.random() * 9000);
+            currentCaptcha = num.toString();
+            textEl.innerText = currentCaptcha.split('').join(' ');
+        }
+
+        // 页面加载时生成随机初始验证码 + 启动在线人数
+        window.onload = function() {
+            refreshCaptcha();
+            // 随机增加在线人数，制造火爆假象
+            onlineInterval = setInterval(() => {
+                const numEl = document.getElementById('onlineNum');
+                let num = parseInt(numEl.innerText);
+                num += Math.floor(Math.random() * 3) + 1;
+                numEl.innerText = num;
+            }, 2000);
+        };
+
+        // 核心恶搞逻辑（含完整校验）
+        function startQuery() {
+            if (isQuerying) return;
+
+            // ---- 1. 获取所有输入框 ----
+            const ticketInput = document.getElementById('ticketNo');
+            const pwdInput = document.getElementById('password');
+            const captchaInput = document.getElementById('captchaInput');
+
+            // ---- 2. 非空校验 ----
+            if (ticketInput.value.trim() === '') {
+                alert('⚠️ 请输入准考证号');
+                ticketInput.focus();
+                return;
+            }
+            if (pwdInput.value.trim() === '') {
+                alert('⚠️ 请输入查询密码');
+                pwdInput.focus();
+                return;
+            }
+            if (captchaInput.value.trim() === '') {
+                alert('⚠️ 请输入验证码');
+                captchaInput.focus();
+                return;
+            }
+
+            // ---- 3. 验证码校验 ----
+            if (captchaInput.value.trim() !== currentCaptcha) {
+                alert('❌ 验证码错误，请重试！');
+                refreshCaptcha();
+                captchaInput.value = '';
+                captchaInput.focus();
+                return;
+            }
+
+            // ---- 4. 所有校验通过，进入查询流程 ----
+            isQuerying = true;
+            const btn = document.getElementById('queryBtn');
+            const form = document.getElementById('loginForm');
+
+            // 按钮加载状态
+            btn.innerText = '处理中...';
+            btn.disabled = true;
+
+            // 替换表单内容为进度条
+            form.innerHTML = `
+                    <div id="loader-wrapper">
+                        <div class="load-text">正在解密高考加密数据...</div>
+                        <div class="progress-bg">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="sub-load-text" id="subLoadText">解析中 0%</div>
+                    </div>
+                `;
+
+            // 模拟解密进度条动画 (2秒内完成)
+            const progressFill = document.getElementById('progressFill');
+            const subLoadText = document.getElementById('subLoadText');
+            let progress = 0;
+            const loadInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 8) + 2;
+                if (progress > 100) progress = 100;
+                progressFill.style.width = progress + '%';
+                subLoadText.innerText = `解析中 ${progress}%`;
+            }, 100);
+
+            // 进度条结束后触发恶搞
+            setTimeout(() => {
+                clearInterval(loadInterval);
+                // 清空表格，展示全新美观的恶搞UI
+                form.innerHTML = `
+                        <div id="troll-wrapper">
+                            <div class="big-emoji">🤯</div>
+                            <h1>恭喜你!</h1>
+                            <div class="sub-tag">GOOD LUCK</div>
+                        </div>
+                    `;
+
+                // 开始下Emoji雨
+                startEmojiRain();
+
+                // 6秒后跳转
+                setTimeout(() => {
+                    clearInterval(rainInterval);
+                    window.location.href = "https://www.acfun.cn/v/ac23039112";
+                }, 5999);
+
+            }, 2300);
+        }
+
+        // Emoji 雨持续掉落生成器
+        function startEmojiRain() {
+            const body = document.body;
+            const container = document.createElement('div');
+            container.className = 'emoji-rain-container';
+            body.appendChild(container);
+
+            const emojis = ['🎉', '🤡', '😈', '💩', '😂', '🤪', '😜', '👻'];
+
+            rainInterval = setInterval(() => {
+                const count = 3 + Math.floor(Math.random() * 5);
+                for (let i = 0; i < count; i++) {
+                    const span = document.createElement('span');
+                    span.className = 'emoji-piece';
+                    span.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+
+                    const size = 24 + Math.random() * 40;
+                    const left = Math.random() * 100;
+                    const duration = 4 + Math.random() * 4;
+                    const delay = Math.random() * 1.5;
+
+                    span.style.fontSize = size + 'px';
+                    span.style.left = left + '%';
+                    span.style.animationDuration = duration + 's';
+                    span.style.animationDelay = delay + 's';
+
+                    container.appendChild(span);
+                }
+            }, 150);
+        }
+    </script>
+</body>
+</html>
